@@ -1,7 +1,35 @@
 <template>
   <div class="typenav-container">
     <div class="container">
-      <h2 class="all">全部商品分类</h2>
+      <div @mouseleave="currentIndex = -1">
+        <h2 class="all">全部商品分类</h2>
+        <div class="sort">
+          <div class="all-sort-list2">
+            <div class="item " v-for="(i1, index1) in categoryList" :key="i1.categoryId"
+              @mouseenter="selectCategory(index1)" :class="{ cur: currentIndex === index1 }">
+              <h3>
+                <a href="">{{ i1.categoryName }}</a>
+              </h3>
+              <div class="item-list clearfix" :style="{ display: currentIndex === index1 ? 'block' : 'none' }">
+                <div class="subitem" v-for="i2 in i1.categoryChild" :key="i2.categoryId">
+                  <dl class="fore">
+                    <dt>
+                      <a href="">{{ i2.categoryName }}</a>
+                    </dt>
+                    <dd>
+                      <em v-for="i3 in i2.categoryChild" :key="i3.categoryId">
+                        <a href="">{{ i3.categoryName }}</a>
+                      </em>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
       <nav class="nav">
         <a href="###">服装城</a>
         <a href="###">美妆馆</a>
@@ -12,47 +40,28 @@
         <a href="###">有趣</a>
         <a href="###">秒杀</a>
       </nav>
-      <div class="sort">
-        <div class="all-sort-list2">
-          <div class="item " v-for="i1 in categoryList" :key="i1.categoryId">
-            <h3>
-              <a href="">{{ i1.categoryName }}</a>
-            </h3>
-            <div class="item-list clearfix">
-              <div class="subitem" v-for="i2 in i1.categoryChild" :key="i2.categoryId">
-                <dl class="fore">
-                  <dt>
-                    <a href="">{{ i2.categoryName }}</a>
-                  </dt>
-                  <dd>
-                    <em v-for="i3 in i2.categoryChild" :key="i3.categoryId">
-                      <a href="">{{ i3.categoryName }}</a>
-                    </em>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import { throttle } from "lodash";
 export default {
   name: "Typenav",
   data() {
     return {
-
+      currentIndex: -1,
     }
   },
   methods: {
     getCategoryList() {
       this.$store.dispatch("getCategoryList");
-    }
+    },
+    //实现节流
+    selectCategory: throttle(function (index) {
+      this.currentIndex = index;
+    }, 50)
   },
   computed: {
     ...mapState({
@@ -174,15 +183,9 @@ export default {
               }
             }
           }
-
-          &:hover {
-            .item-list {
-              display: block;
-            }
-          }
         }
 
-        .item:hover {
+        .cur {
           background-color: skyblue;
         }
       }
