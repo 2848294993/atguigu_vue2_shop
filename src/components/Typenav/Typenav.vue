@@ -61,7 +61,6 @@ export default {
   },
   created() {
     this.getCategoryList();
-    console.log(this.categoryList);
   }
 }
 </script>
