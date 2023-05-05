@@ -109,9 +109,19 @@ export default {
 
     }
   },
-  methods: {
-
+  computed: {
+    ...mapState({
+      bannerList: state => state.home.bannerList
+    }),
   },
+  methods: {
+    getBannerList() {
+      this.$store.dispatch("getBannerList");
+    }
+  },
+  created() {
+    this.getBannerList();
+  }
 
 
 }
