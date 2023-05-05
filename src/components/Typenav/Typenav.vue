@@ -4,21 +4,24 @@
       <div @mouseleave="currentIndex = -1">
         <h2 class="all">全部商品分类</h2>
         <div class="sort">
-          <div class="all-sort-list2">
+          <div class="all-sort-list2" @click="selectCategory">
             <div class="item " v-for="(i1, index1) in categoryList" :key="i1.categoryId"
-              @mouseenter="selectCategory(index1)" :class="{ cur: currentIndex === index1 }">
+              @mouseenter="hoverCategory(index1)" :class="{ cur: currentIndex === index1 }">
               <h3>
-                <a href="">{{ i1.categoryName }}</a>
+                <a href="#" :data-categoryName="i1.categoryName" :data-category1Id="i1.categoryId">{{ i1.categoryName
+                }}</a>
               </h3>
               <div class="item-list clearfix" :style="{ display: currentIndex === index1 ? 'block' : 'none' }">
                 <div class="subitem" v-for="i2 in i1.categoryChild" :key="i2.categoryId">
                   <dl class="fore">
                     <dt>
-                      <a href="">{{ i2.categoryName }}</a>
+                      <a href="#" :data-categoryName="i2.categoryName" :data-category2Id="i2.categoryId">{{
+                        i2.categoryName }}</a>
                     </dt>
                     <dd>
                       <em v-for="i3 in i2.categoryChild" :key="i3.categoryId">
-                        <a href="">{{ i3.categoryName }}</a>
+                        <a href="#" :data-categoryName="i3.categoryName" :data-category3Id="i3.categoryId">{{
+                          i3.categoryName }}</a>
                       </em>
                     </dd>
                   </dl>
@@ -58,8 +61,29 @@ export default {
     getCategoryList() {
       this.$store.dispatch("getCategoryList");
     },
+    selectCategory(e) {
+      e.preventDefault();//阻止a连接的自动跳转
+      let element = e.target;
+      const { categoryname, category1id, category2id, category3id } = element.dataset;
+      //证明是a标签触发了click事件
+      if (categoryname) {
+        let location = { name: "Search" };
+        let query = { categoryName: categoryname };
+        if (category1id) {
+          query.category1Id = category1id;
+        }
+        else if (category2id) {
+          query.category2Id = category2id;
+        }
+        else {
+          query.category3Id = category3id;
+        }
+        location.query = query;
+        this.$router.push(location);
+      }
+    },
     //实现节流
-    selectCategory: throttle(function (index) {
+    hoverCategory: throttle(function (index) {
       this.currentIndex = index;
     }, 50)
   },
@@ -110,7 +134,7 @@ export default {
       left: 0;
       top: 45px;
       width: 210px;
-      height: 461px;
+      height: 431px;
       position: absolute;
       background: #fafafa;
       z-index: 999;
@@ -118,8 +142,8 @@ export default {
       .all-sort-list2 {
         .item {
           h3 {
-            line-height: 30px;
-            font-size: 14px;
+            line-height: 28px;
+            font-size: 10px;
             font-weight: 400;
             overflow: hidden;
             padding: 0 20px;

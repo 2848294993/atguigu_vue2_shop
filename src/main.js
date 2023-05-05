@@ -6,6 +6,7 @@ import store from '@/store/index'
 
 Vue.config.productionTip = false
 
+
 Vue.component(Typenav.name, Typenav);
 new Vue({
   router,//组件身上都挂载了$route和$router

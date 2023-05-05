@@ -43,6 +43,9 @@
 <script>
 export default {
   name: "Head",
+  props: [],
+  methods: {
+  }
 }
 </script>
 
